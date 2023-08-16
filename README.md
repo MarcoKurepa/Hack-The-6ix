@@ -1,2 +1,2 @@
-# Hack-the-6ix
+# Hack-The-6ix
 Project for Hack The 6ix
