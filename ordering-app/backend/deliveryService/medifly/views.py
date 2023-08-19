@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Hospital, Request, Customer, Medication
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 
 @csrf_exempt
@@ -94,3 +94,7 @@ def hospital_logged_in(request):
 def customer_logged_in(request):
     logged_in = request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists()
     return JsonResponse({'loggedIn': logged_in})
+
+def user_logout(request):
+    logout(request)
+    return JsonResponse({'loggedOut': True})
