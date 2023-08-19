@@ -25,7 +25,24 @@ const NavBar = () => {
 }
 
 const Dashboard = () => {
-    
+    const [info, setInfo] = useState(undefined)
+
+    useEffect(() => {
+        const url = `${ROUTES.server}/hospital/info`
+        axios.get(url, {withCredentials: true}).then((response) => {
+            if(response.status === 200){
+                setInfo(response.data)
+            }
+        })
+    })
+
+    if(!info) return <>Loading...</>
+    else {
+        return <>
+            <h1>Welcome {info.name}</h1>
+            
+        </>
+    }
 }
 
 const Content = () => {
@@ -47,7 +64,7 @@ const Content = () => {
     else if(!loggedIn) {
         return <HospitalLogin />
     } else {
-        return <>Logged in</>
+        return <Dashboard />
     }
 }
 

@@ -54,16 +54,15 @@ def hospital_login(request):
 
 @csrf_exempt
 def hospital_data(request):
-    if request.method == "POST":
-        if request.user.is_authenticated:
-            username = request.user.username
-            if Hospital.objects.filter(username=username).exists():
-                hospital = Hospital.objects.get(username=username)
-                requests = hospital.request_set.all()
-                request_data = [{'username': q.user.username, 'longitude': q.longitude, 'latitude': q.latitude,
-                                 'medication': q.medication} for q in requests]
-                hospital_info = {'name': hospital.hospital_name, 'requests': request_data}
-                return JsonResponse(hospital_info)
+    if request.user.is_authenticated:
+        username = request.user.username
+        if Hospital.objects.filter(username=username).exists():
+            hospital = Hospital.objects.get(username=username)
+            requests = hospital.request_set.all()
+            request_data = [{'username': q.user.username, 'longitude': q.longitude, 'latitude': q.latitude,
+                             'medication': q.medication} for q in requests]
+            hospital_info = {'name': hospital.hospital_name, 'requests': request_data}
+            return JsonResponse(hospital_info)
 
 @csrf_exempt
 def customer_register(request):
