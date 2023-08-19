@@ -3,8 +3,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate as user_auth
 
+class Medication(models.Model):
+    name = models.CharField(max_length=80)
+
 class Hospital(User):
     hospital_name = models.CharField(max_length=100)
+    inventory = models.ManyToManyField(Medication)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     @staticmethod
     def authenticate(username, password):

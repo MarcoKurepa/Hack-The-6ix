@@ -10,10 +10,19 @@ from django.contrib.auth import login
 @csrf_exempt
 def submit_request(request):
     if request.method == "POST":
-        return JsonResponse({'message': 'Hello'})
-    else:
-        raise Http404
-
+        body = json.loads(request.body)
+        if request.user.is_authenticated:
+            username = request.user.username
+            if Customer.objects.filter(username=username).exists():
+                customer = Customer.objects.get(username=username)
+                if Request.objects.filter(user=customer).exists():
+                    return JsonResponse({'message': 'previous request open'})
+                long, lat, medication = body['long'], body['lat'], body['medication']
+                nearby = Hospital.objects.filter(inventory__name__iexact=medication)
+                closest = min(nearby, key=lambda x: (x.longitude-long)**2 + (x.latitude-lat)**2)
+                request = Request(hospital=closest, user=customer, longitude=long, latitude=lat, medication=medication)
+                request.save()
+                return JsonResponse({'message': 'success'})
 
 @csrf_exempt
 def hospital_register(request):
