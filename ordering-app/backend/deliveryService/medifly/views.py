@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Hospital, Request, Customer
+from .models import Hospital, Request, Customer, Medication
 from django.contrib.auth import login
 
 
@@ -29,7 +29,11 @@ def hospital_register(request):
     if request.method == "POST":
         body = json.loads(request.body)
         hospital = Hospital.objects.create_user(username=body['username'], password=body['password'],
-                                                hospital_name=body['name'])
+                                                hospital_name=body['name'], longitude=body['longitude'], latitude=body['latitude'])
+        for medication_name in body['medication']:
+            medicine = Medication.objects.filter(name__iexact=medication_name)
+            if medicine.exists():
+                hospital.inventory.add(medicine[0])
         hospital.save()
         if hospital.pk is not None:
             login(request, hospital)
