@@ -20,7 +20,7 @@ def submit_request(request):
                     return JsonResponse({'message': 'previous request open'})
                 long, lat, medication = body['long'], body['lat'], body['medication']
                 nearby = Hospital.objects.filter(inventory__name__iexact=medication)
-                closest = min(nearby, key=lambda x: (x.longitude-long)**2 + (x.latitude-lat)**2)
+                closest = min(nearby, key=lambda x: (float(x.longitude)-long)**2 + (float(x.latitude)-lat)**2)
                 request = Request(hospital=closest, user=customer, longitude=long, latitude=lat, medication=medication)
                 request.save()
                 return JsonResponse({'message': 'success'})
@@ -83,9 +83,9 @@ def customer_login(request):
         customer = Customer.authenticate(username=body['username'], password=body['password'])
         if customer is not None:
             login(request, customer)
-            return JsonResponse({'message': f'success {customer.uuid}'})
+            return JsonResponse({'message': f'success {customer.uuid}', 'success': True})
         else:
-            return JsonResponse({'message': 'none found'})
+            return JsonResponse({'message': 'none found', 'success': False})
 
 def customer_uuid(request):
     if request.user.is_authenticated:

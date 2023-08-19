@@ -8,6 +8,16 @@ import CustomerLogin from './login';
 axios.defaults.withCredentials = true;
 
 const SearchPage = () => {
+    const [allMedication, setAllMedication] = useState(undefined)
+
+    useEffect(() => {
+        axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
+            if(res.status === 200){
+                setAllMedication(res.data.medications)
+            }
+        })
+    }, [])
+
 
 }
 
@@ -16,10 +26,14 @@ const Dashboard = () => {
     const [emergencyMedication, setEmergencyMedication] = useState(undefined)
     const [allMedication, setAllMedication] = useState(undefined)
 
+    const [sendingRequest, setSendingRequest] = useState(false)
+    const [curMedication, setCurMedication] = useState(undefined)
+    const [curLocation, setCurLocation] = useState(undefined)
+
     useEffect(() => {
         axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
             if(res.status === 200){
-                setAllMedication(res.data.medicine)
+                setAllMedication(res.data.medications)
             }
         })
         axios.get(`${ROUTES.server}/customer/important-medication`, {withCredentials: true}).then((res) => {
@@ -27,19 +41,48 @@ const Dashboard = () => {
                 setEmergencyMedication(res.data.medicine)
             }
         })
+        navigator.geolocation.getCurrentPosition(setCurLocation)
     }, [])
 
     const emergency = () => {
         setIsEmergency(true)
     }
 
+    useEffect(() => {
+        if(sendingRequest && curMedication && curLocation){
+            axios.post(`${ROUTES.server}/submit-request/`, {
+                long: curLocation.coords.longitude, 
+                lat: curLocation.coords.latitude, 
+                medication: curMedication
+            }, {withCredentials: true}).then((res) => {
+                if(res.status === 200 && res.data.message === "success"){
+                    alert("Success!")
+                    window.location.replace('/client/status')
+                } else {
+                    alert("Something went wrong")
+                }
+            })
+        }
+    }, [curLocation, curMedication, sendingRequest])
+
     const search = () => {
         window.location.replace("/client/search")
     }
 
+    const requestMedication = (name) => {
+        if(!sendingRequest){
+            setSendingRequest(true)
+            setCurMedication(name)
+        }
+    }
+
     let emEl = <input type="button" value="Emergency" onClick={emergency} />
     if(isEmergency && emergencyMedication && allMedication){
-        emEl = <div>{emergencyMedication.map((el) => <span key={el}>{el}</span>)}</div>
+        emEl = <div>{emergencyMedication.map((el) => 
+            <span key={el}>
+                    <span onClick={() => requestMedication(el)}>{el}</span>
+                    <br />
+            </span>)}</div>
     }
 
     return <>

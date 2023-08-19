@@ -81,7 +81,7 @@ export const ActivationPage = () => {
     const [uuid, setUUID] = useState(undefined)
 
     const next = () => {
-        document.cookie = `prev-link=http://${window.location.hostname}/client; SameSite=Lax; path=/`
+        document.cookie = `prev-link=${window.location.origin}/client; SameSite=Lax; path=/`
         window.location.replace(`${ROUTES.server}/videostream`)
     }
     
