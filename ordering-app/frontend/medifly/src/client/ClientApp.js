@@ -1,11 +1,12 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import {RegisterPage, ActivationPage} from './register';
 import CustomerLogin from './login';
 
 axios.defaults.withCredentials = true;
+const LocationContext = React.createContext()
 
 const SearchPage = () => {
     const [allMedication, setAllMedication] = useState(undefined)
@@ -21,14 +22,19 @@ const SearchPage = () => {
 
 }
 
+const StatusPage = () => {
+
+}
+
 const Dashboard = () => {
     const [isEmergency, setIsEmergency] = useState(false)
     const [emergencyMedication, setEmergencyMedication] = useState(undefined)
     const [allMedication, setAllMedication] = useState(undefined)
 
     const [sendingRequest, setSendingRequest] = useState(false)
+    const [sentRequest, setSentRequest] = useState(false)
     const [curMedication, setCurMedication] = useState(undefined)
-    const [curLocation, setCurLocation] = useState(undefined)
+    const curLocation = useContext(LocationContext)
 
     useEffect(() => {
         axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
@@ -41,7 +47,6 @@ const Dashboard = () => {
                 setEmergencyMedication(res.data.medicine)
             }
         })
-        navigator.geolocation.getCurrentPosition(setCurLocation)
     }, [])
 
     const emergency = () => {
@@ -49,7 +54,7 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
-        if(sendingRequest && curMedication && curLocation){
+        if(sendingRequest && curMedication && curLocation && !sentRequest){
             axios.post(`${ROUTES.server}/submit-request/`, {
                 long: curLocation.coords.longitude, 
                 lat: curLocation.coords.latitude, 
@@ -62,8 +67,9 @@ const Dashboard = () => {
                     alert("Something went wrong")
                 }
             })
+            setSentRequest(true)
         }
-    }, [curLocation, curMedication, sendingRequest])
+    }, [curLocation, curMedication, sendingRequest, sentRequest])
 
     const search = () => {
         window.location.replace("/client/search")
@@ -112,7 +118,7 @@ const NavBar = () => {
     return <div style={style}><input type="button" style={buttonStyle} value="Logout" onClick={logOut}/></div>
 }
 
-const App = () => {
+const Content = () => {
     const [loggedIn, setLoggedIn] = useState(false)
     const [needCompletion, setNeedCompletion] = useState(false)
     const [loginChecked, setLoginChecked] = useState(false)
@@ -152,10 +158,26 @@ const App = () => {
                 <Route path="/login" element={<CustomerLogin />} />
                 <Route path="/activate" element={<ActivationPage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/status" element={<StatusPage />} />
                 <Route path="/" element={<Dashboard />} />
             </Routes>
         </>
     }
+}
+
+const App = () => {
+    const [curLocation, setCurLocation] = useState(undefined)
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            setCurLocation(pos)
+            navigator.geolocation.watchPosition(setCurLocation)
+        })
+    }, [])
+
+    return <LocationContext.Provider value={curLocation}>
+        <Content />
+    </LocationContext.Provider>
 }
 
 export default App;

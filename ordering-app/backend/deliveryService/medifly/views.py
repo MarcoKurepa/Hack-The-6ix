@@ -16,8 +16,6 @@ def submit_request(request):
             username = request.user.username
             if Customer.objects.filter(username=username).exists():
                 customer = Customer.objects.get(username=username)
-                if Request.objects.filter(user=customer).exists():
-                    return JsonResponse({'message': 'previous request open'})
                 long, lat, medication = body['long'], body['lat'], body['medication']
                 nearby = Hospital.objects.filter(inventory__name__iexact=medication)
                 closest = min(nearby, key=lambda x: (float(x.longitude)-long)**2 + (float(x.latitude)-lat)**2)
