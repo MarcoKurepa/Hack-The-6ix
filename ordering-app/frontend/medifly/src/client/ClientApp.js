@@ -8,50 +8,10 @@ import CustomerLogin from './login';
 axios.defaults.withCredentials = true;
 const LocationContext = React.createContext()
 
-const SearchPage = () => {
-    const [allMedication, setAllMedication] = useState(undefined)
-
-    useEffect(() => {
-        axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
-            if(res.status === 200){
-                setAllMedication(res.data.medications)
-            }
-        })
-    }, [])
-
-
-}
-
-const StatusPage = () => {
-
-}
-
-const Dashboard = () => {
-    const [isEmergency, setIsEmergency] = useState(false)
-    const [emergencyMedication, setEmergencyMedication] = useState(undefined)
-    const [allMedication, setAllMedication] = useState(undefined)
-
+const RequestButton = ({sentRequest, setSent, name}) => {
+    const curLocation = React.useContext(LocationContext)
+    const curMedication = name
     const [sendingRequest, setSendingRequest] = useState(false)
-    const [sentRequest, setSentRequest] = useState(false)
-    const [curMedication, setCurMedication] = useState(undefined)
-    const curLocation = useContext(LocationContext)
-
-    useEffect(() => {
-        axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
-            if(res.status === 200){
-                setAllMedication(res.data.medications)
-            }
-        })
-        axios.get(`${ROUTES.server}/customer/important-medication`, {withCredentials: true}).then((res) => {
-            if(res.status === 200){
-                setEmergencyMedication(res.data.medicine)
-            }
-        })
-    }, [])
-
-    const emergency = () => {
-        setIsEmergency(true)
-    }
 
     useEffect(() => {
         if(sendingRequest && curMedication && curLocation && !sentRequest){
@@ -67,28 +27,70 @@ const Dashboard = () => {
                     alert("Something went wrong")
                 }
             })
-            setSentRequest(true)
+            setSent(true)
         }
-    }, [curLocation, curMedication, sendingRequest, sentRequest])
+    }, [curLocation, curMedication, sendingRequest, sentRequest, setSent])
+
+    return <span onClick={() => setSendingRequest(true)}>{name}</span>
+}
+
+const SearchPage = () => {
+    const [allMedication, setAllMedication] = useState(undefined)
+    const [sentRequest, setSentRequest] = useState(false)
+
+    useEffect(() => {
+        axios.get(`${ROUTES.server}/medications`, {withCredentials: true}).then((res) => {
+            if(res.status === 200){
+                setAllMedication(res.data.medications)
+            }
+        })
+    }, [])
+
+    return <div>
+        {allMedication && allMedication.map((el) =>             
+        <span key={el}>
+                <RequestButton sentRequest={sentRequest} setSent={setSentRequest} name={el} />
+                <br />
+        </span>)}
+        <input type="button" value="Home" onClick={() => window.location.replace("/client")}/>
+    </div>
+}
+
+const StatusPage = () => {
+
+}
+
+const Dashboard = () => {
+    const [isEmergency, setIsEmergency] = useState(false)
+    const [emergencyMedication, setEmergencyMedication] = useState(undefined)
+
+    const [sentRequest, setSentRequest] = useState(false)
+
+    useEffect(() => {
+        axios.get(`${ROUTES.server}/customer/important-medication`, {withCredentials: true}).then((res) => {
+            if(res.status === 200){
+                setEmergencyMedication(res.data.medicine)
+            }
+        })
+    }, [])
+
+    const emergency = () => {
+        setIsEmergency(true)
+    }
 
     const search = () => {
         window.location.replace("/client/search")
     }
 
-    const requestMedication = (name) => {
-        if(!sendingRequest){
-            setSendingRequest(true)
-            setCurMedication(name)
-        }
-    }
-
     let emEl = <input type="button" value="Emergency" onClick={emergency} />
-    if(isEmergency && emergencyMedication && allMedication){
-        emEl = <div>{emergencyMedication.map((el) => 
+    if(isEmergency && emergencyMedication){
+        emEl = <div>
+        {emergencyMedication.map((el) => 
             <span key={el}>
-                    <span onClick={() => requestMedication(el)}>{el}</span>
-                    <br />
-            </span>)}</div>
+                <RequestButton sentRequest={sentRequest} setSent={setSentRequest} name={el} />
+                <br />
+            </span>)}
+        </div>
     }
 
     return <>
