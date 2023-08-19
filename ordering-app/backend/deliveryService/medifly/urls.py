@@ -16,13 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login
+from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login, hospital_logged_in, customer_logged_in
 
 urlpatterns = [
     path('submit-request/', submit_request),
     path('hospital/register', hospital_register),
     path('hospital/login', hospital_login),
     path('hospital/info', hospital_data),
+    path('hospital/logged-in', hospital_logged_in),
     path('customer/register', customer_register),
     path('customer/login', customer_login),
+    path('customer/logged-in', customer_logged_in)
 ]

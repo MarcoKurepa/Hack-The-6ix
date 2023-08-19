@@ -86,3 +86,11 @@ def customer_login(request):
             return JsonResponse({'message': f'success {customer.uuid}'})
         else:
             return JsonResponse({'message': 'none found'})
+
+def hospital_logged_in(request):
+    logged_in = request.user.is_authenticated and Hospital.objects.filter(username=request.user.username).exists()
+    return logged_in
+
+def customer_logged_in(request):
+    logged_in = request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists()
+    return logged_in
