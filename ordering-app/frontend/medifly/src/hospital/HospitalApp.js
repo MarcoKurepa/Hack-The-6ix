@@ -40,7 +40,6 @@ const Dashboard = () => {
     else {
         return <>
             <h1>Welcome {info.name}</h1>
-            
         </>
     }
 }
