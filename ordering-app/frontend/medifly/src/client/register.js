@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
-import {HTML} from './videostream.html';
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState("");
@@ -54,6 +53,15 @@ const MedicationSelectionPage = (props) => {
         setAllMedication(copy)
     }
 
+    const sendChoices = () => {
+        axios.post(`${ROUTES.server}/customer/set-medication`, {medication: allMedication.filter((el) => el.used).map((el) => el.name)},
+            {withCredentials: true}).then((response) => {
+                if(response.status === 200){
+                    nextHandler()
+                }
+            })
+    }
+
     if(allMedication === undefined) return <>Loading...</>
     else {
         const elements = allMedication.map((el, ind) => 
@@ -62,25 +70,18 @@ const MedicationSelectionPage = (props) => {
             <br/>
         </span>
         );
-        console.log(allMedication)
-        console.log(elements)
         return <div>
             {elements}
-            <input type="button" value="next" onClick={nextHandler} />
+            <input type="button" value="next" onClick={sendChoices} />
         </div>
     }
 }
 
-const VideoSelection = () => {
-    return <div dangerouslySetInnerHTML={{__html: HTML}}></div>
-}
-
 export const ActivationPage = () => {
     const [uuid, setUUID] = useState(undefined)
-    const [curType, setCurType] = useState("medicationSelect");
 
     const next = () => {
-        setCurType("videoSelect")
+        window.location.replace(`${ROUTES.server}/videostream`)
     }
     
     useEffect(() => {
@@ -95,8 +96,7 @@ export const ActivationPage = () => {
         return <>Loading...</>
     } else {
         return <>
-            {curType === "medicationSelect" && <MedicationSelectionPage nextHandler={next} />}
-            {curType === "videoSelect" && <VideoSelection />}
+            <MedicationSelectionPage nextHandler={next} />
         </>
 
     }

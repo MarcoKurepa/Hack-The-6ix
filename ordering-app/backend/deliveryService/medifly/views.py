@@ -1,7 +1,8 @@
 from django.http import Http404
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.template import loader
 
 from .models import Hospital, Request, Customer, Medication
 from django.contrib.auth import login, logout
@@ -111,3 +112,30 @@ def customer_logged_in(request):
 def user_logout(request):
     logout(request)
     return JsonResponse({'loggedOut': True})
+
+def medications(request):
+    return JsonResponse({'medications': list(map(lambda x: x.name, Medication.objects.all()))})
+
+def start_video_stream(request):
+    if request.user.is_authenticated:
+        username = request.user.username
+        if Customer.objects.filter(username=username).exists():
+            customer = Customer.objects.get(username=username)
+            template = loader.get_template("medifly/videostream.html")
+            context = {
+                'uuid': customer.uuid
+            }
+            return HttpResponse(template.render(context))
+
+@csrf_exempt
+def set_emergency_medication(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        username = request.user.username
+        if Customer.objects.filter(username=username).exists():
+            customer = Customer.objects.get(username=username)
+            body = json.loads(request.body)
+            customer.emergency_medication.clear()
+            for i in body['medication']:
+                customer.emergency_medication.add(Medication.objects.get(name=i))
+            customer.save()
+            return JsonResponse({'message': 'success'})

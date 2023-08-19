@@ -21,6 +21,7 @@ class Hospital(User):
 class Customer(User):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     registration_complete = models.BooleanField(default=False)
+    emergency_medication = models.ManyToManyField(Medication)
 
     @staticmethod
     def authenticate(username, password):
