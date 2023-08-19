@@ -91,8 +91,8 @@ def customer_uuid(request):
         username = request.user.username
         users = Customer.objects.filter(username=username)
         if users.exists():
-            user = users[1]
-            return user.uuid
+            user = users[0]
+            return JsonResponse({'uuid': user.uuid})
 
 def hospital_logged_in(request):
     logged_in = request.user.is_authenticated and Hospital.objects.filter(username=request.user.username).exists()
