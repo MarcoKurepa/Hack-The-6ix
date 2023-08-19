@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login, hospital_logged_in, customer_logged_in, user_logout
+from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login, \
+    hospital_logged_in, customer_logged_in, user_logout, customer_uuid
 
 urlpatterns = [
     path('submit-request/', submit_request),
@@ -27,5 +28,6 @@ urlpatterns = [
     path('customer/register', customer_register),
     path('customer/login', customer_login),
     path('customer/logged-in', customer_logged_in),
+    path('customer/uuid', customer_uuid),
     path('logout', user_logout)
 ]
