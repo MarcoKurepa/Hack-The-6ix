@@ -109,6 +109,11 @@ def customer_logged_in(request):
     else:
         return JsonResponse({'loggedIn': False, 'registrationCompleted': False})
 
+def important_medication(request):
+    if request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists():
+        customer = Customer.objects.get(username=request.user.username)
+        return JsonResponse({'medicine': list(map(lambda x: x.name, customer.emergency_medication.all()))})
+
 def user_logout(request):
     logout(request)
     return JsonResponse({'loggedOut': True})
@@ -123,7 +128,8 @@ def start_video_stream(request):
             customer = Customer.objects.get(username=username)
             template = loader.get_template("medifly/videostream.html")
             context = {
-                'uuid': customer.uuid
+                'uuid': customer.uuid,
+                'to_host': f'http://{request.get_host()}/customer/finish-registration'
             }
             return HttpResponse(template.render(context))
 
@@ -139,3 +145,11 @@ def set_emergency_medication(request):
                 customer.emergency_medication.add(Medication.objects.get(name=i))
             customer.save()
             return JsonResponse({'message': 'success'})
+
+def registration_done(request):
+    username = request.user.username
+    if Customer.objects.filter(username=username).exists():
+        customer = Customer.objects.get(username=username)
+        customer.registration_complete = True
+        customer.save()
+        return JsonResponse({'message': 'success'})

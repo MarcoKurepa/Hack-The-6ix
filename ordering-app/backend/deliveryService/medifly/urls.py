@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login, \
-    hospital_logged_in, customer_logged_in, user_logout, customer_uuid, medications, start_video_stream, set_emergency_medication
+    hospital_logged_in, customer_logged_in, user_logout, customer_uuid, medications, start_video_stream, set_emergency_medication, \
+    registration_done, important_medication
 
 urlpatterns = [
     path('submit-request/', submit_request),
@@ -30,6 +31,8 @@ urlpatterns = [
     path('customer/logged-in', customer_logged_in),
     path('customer/uuid', customer_uuid),
     path('customer/set-medication', set_emergency_medication),
+    path('customer/finish-registration', registration_done),
+    path('customer/important-medication', important_medication),
     path('logout', user_logout),
     path('medications', medications),
     path('videostream', start_video_stream)

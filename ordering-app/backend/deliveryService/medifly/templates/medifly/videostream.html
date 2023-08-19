@@ -20,7 +20,7 @@
         left: 10px;
         background: white;
     }
-    
+
     .display-cover {
         display: flex;
         justify-content: center;
@@ -29,25 +29,25 @@
         margin: 5% auto;
         position: relative;
     }
-    
+
     video {
         width: 100%;
         background: rgba(0, 0, 0, 0.2);
     }
-    
+
     .video-options {
         position: absolute;
         left: 20px;
         top: 30px;
     }
-    
+
     .controls {
         position: absolute;
         right: 20px;
         top: 20px;
         display: flex;
     }
-    
+
     .controls > button {
         width: 45px;
         height: 45px;
@@ -56,21 +56,21 @@
         margin: 0 6px;
         background: transparent;
     }
-    
+
     .controls > button:hover svg {
         color: white !important;
     }
-    
+
     @media (min-width: 300px) and (max-width: 400px) {
         .controls {
             flex-direction: column;
         }
-    
+
         .controls button {
             margin: 5px 0 !important;
         }
     }
-    
+
     .controls > button > svg {
         height: 20px;
         width: 18px;
@@ -78,31 +78,31 @@
         margin: 0 auto;
         padding: 0;
     }
-    
+
     .controls button:nth-child(1) {
         border: 2px solid #D2002E;
     }
-    
+
     .controls button:nth-child(1) svg {
         color: #D2002E;
     }
-    
+
     .controls button:nth-child(2) {
         border: 2px solid #008496;
     }
-    
+
     .controls button:nth-child(2) svg {
         color: #008496;
     }
-    
+
     .controls button:nth-child(3) {
         border: 2px solid #00B541;
     }
-    
+
     .controls button:nth-child(3) svg {
         color: #00B541;
     }
-    
+
     .controls > button {
         width: 45px;
         height: 45px;
@@ -111,7 +111,7 @@
         margin: 0 6px;
         background: transparent;
     }
-    
+
     .controls > button:hover svg {
         color: white;
     }
@@ -134,11 +134,16 @@
         <button class="btn btn-info pause d-none" title="Pause"><i data-feather="pause"></i></button>
         <button class="btn btn-outline-success screenshot d-none" title="ScreenShot"><i data-feather="image"></i></button>
     </div>
+
     <div style="display: none" id="uuid">
         {{ uuid }}
     </div>
+    <div style="display: none" id="to-host">
+        {{ to_host }}
+    </div>
 </div>
 <script src="https://unpkg.com/feather-icons"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     feather.replace();
 
@@ -155,6 +160,31 @@ exampleSocket.onopen = function (event) {
 };
 exampleSocket.onmessage = function (event) {
     console.log(event.data);
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    if(event.data === "Facial data extraction complete"){
+        axios.get(document.getElementById("to-host").innerHTML.trim(), {withCredentials: true}).then((response) => {
+            if(response.status === 200){
+                console.log(document.cookie)
+                console.log(getCookie('prev-link'))
+                window.location.replace(getCookie('prev-link'))
+            }
+        })
+    }
     doScreenshot();
 }
 const [play, pause, screenshot] = buttons;
@@ -217,8 +247,9 @@ const doScreenshot = () => {
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
   var b64 = canvas.toDataURL('image/webp');
-  
-  str1 = document.getElementById("uuid").innerHTML + b64;
+
+  str1 = document.getElementById("uuid").innerHTML.trim() + b64;
+  // str1 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + b64
   console.log(str1);
   exampleSocket.send(str1);
 
@@ -244,7 +275,7 @@ const getCameraSelection = async () => {
   const devices = await navigator.mediaDevices.enumerateDevices();
   const videoDevices = devices.filter(device => device.kind === 'videoinput');
   const options = videoDevices.map(videoDevice => {
-    return '<option value="\${videoDevice.deviceId}">\${videoDevice.label}</option>';
+    return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
   });
   cameraOptions.innerHTML = options.join('');
 };
