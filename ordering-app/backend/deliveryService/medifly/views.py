@@ -47,9 +47,9 @@ def hospital_login(request):
         user = Hospital.authenticate(username=body['username'], password=body['password'])
         if user is not None:
             login(request, user)
-            return JsonResponse({'message': f'success {user.hospital_name}'})
+            return JsonResponse({'message': f'success {user.hospital_name}', 'success': True})
         else:
-            return JsonResponse({'message': 'none found'})
+            return JsonResponse({'message': 'none found', 'success': False})
 
 
 @csrf_exempt
@@ -89,8 +89,8 @@ def customer_login(request):
 
 def hospital_logged_in(request):
     logged_in = request.user.is_authenticated and Hospital.objects.filter(username=request.user.username).exists()
-    return logged_in
+    return JsonResponse({'loggedIn': logged_in})
 
 def customer_logged_in(request):
     logged_in = request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists()
-    return logged_in
+    return JsonResponse({'loggedIn': logged_in})
