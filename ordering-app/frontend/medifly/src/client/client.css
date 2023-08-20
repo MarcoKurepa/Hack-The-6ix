@@ -1,0 +1,70 @@
+:root{
+    --lightBlue: #0093D2;
+    --lighterBlue: #10A3E2;
+    --lightestBlue: #20B3F2;
+    --red: #FF0000;
+    --lightGray: #EEEEEE;
+    --lightishGray: #CCCCCC;
+    --gray: #AAAAAA;
+    --lighterGreen: #DDFFDD;
+}
+
+.bigRounded {
+    padding: 10px 30px;
+    border-radius: 40px;
+    border-width: 0px;
+    width: 100%;
+}
+
+.slightBold {
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.whiteHover {
+    background-color: white;
+    transition-duration: 0.5s;
+}
+
+.whiteHover:hover {
+    background-color: var(--lightGray);
+}
+
+.blueHover {
+    background-color: var(--lightestBlue);
+    transition-duration: 0.5s;
+}
+
+.blueHover:hover {
+    background-color: var(--lighterBlue);
+}
+
+.grayHover {
+    background-color: var(--lightishGray);
+    transition-duration: 0.5s;
+}
+
+.grayHover:hover {
+    background-color: var(--gray);
+}
+
+.defaultWhite {
+    background-color: white;
+}
+
+.hoverGray {
+    transition-duration: 0.5s;
+}
+
+.hoverGray:hover {
+    background-color: var(--lightishGray);
+}
+
+.hoverLightGreen {
+    background-color: white;
+    transition-duration: 0.5s;
+}
+
+.hoverLightGreen:hover {
+    background-color: var(--lighterGreen);
+}
