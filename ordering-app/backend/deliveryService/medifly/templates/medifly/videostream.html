@@ -122,6 +122,9 @@
     <video autoplay></video>
     <canvas class="d-none"></canvas>
 
+    <h1>Face Registration System</h1>
+    <p>Click the red button to start recording your face - remember to move it around!</p>
+
     <div class="video-options">
         <select name="" id="" class="custom-select">
             <option value="">Select camera</option>
@@ -179,6 +182,7 @@ exampleSocket.onmessage = function (event) {
     if(event.data === "Facial data extraction complete"){
         axios.get(document.getElementById("to-host").innerHTML.trim(), {withCredentials: true}).then((response) => {
             if(response.status === 200){
+                alert("Facial data extraction complete! Redirecting you back...")
                 console.log(document.cookie)
                 console.log(getCookie('prev-link'))
                 window.location.replace(getCookie('prev-link'))
