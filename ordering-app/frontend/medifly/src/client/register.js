@@ -87,6 +87,7 @@ const MedicationSelectionPage = (props) => {
             return <span key={el.name} style={{...colorStyle, textAlign: 'center', padding: "5px", marginTop: "10px", border: "solid 2px black", borderRadius: "5px"}} type="button" onClick={() => toggleChoice(ind)} className={el.used ? "" : "hoverLightGreen"}>{el.name}</span>
         });
         return <div style={{marginTop: "5em", display: "flex", flexDirection: "column", paddingLeft: "20px", paddingRight: "20px"}}>
+            <h2 style={{textAlign: 'center'}}>Choose what you might need</h2>
             {elements}
             <input type="button" value="next" onClick={sendChoices} className="bigRounded grayHover slightBold" style={{marginTop: "10px"}}/>
         </div>

@@ -52,6 +52,7 @@ const SearchPage = () => {
     }, [])
 
     return <div style={{display: 'flex', flexDirection: 'column', paddingTop: '5em', backgroundColor: 'var(--lighterBlue)', paddingLeft: '20px', paddingRight: '20px'}}>
+        <h2 style={{textAlign: 'center'}}>What do you need?</h2>
         {allMedication !== undefined && allMedication.map((el) =>             
         <RequestButton key={el} sentRequest={sentRequest} setSent={setSentRequest} name={el} />)}
         <input type="button" value="Home 🏠" onClick={() => window.location.replace("/client")} className="bigRounded slightBold grayHover" style={{marginTop: "10px", borderRadius: "10px", border: "solid 2px red"}}/>
@@ -79,7 +80,9 @@ const StatusPage = () => {
             </div>
         )
         return <div style={{paddingTop: '5em', paddingLeft: '20px', paddingRight: '20px'}}>
+            <h2 style={{textAlign: 'center'}}>Status of current Requests</h2>
             {els}
+            <input type="button" value="Home 🏠" onClick={() => window.location.replace("/client")} className="bigRounded slightBold grayHover" style={{marginTop: "10px", borderRadius: "10px", border: "solid 2px black"}}/>
         </div>
     }
 }
@@ -117,6 +120,7 @@ const Dashboard = () => {
 
     return <>
         <div style={{display: 'flex', flexDirection: 'column', marginTop: "5em", marginLeft: "50px", marginRight: "50px", textAlign: 'center'}}>
+            <h2>What can I help you with?</h2>
             {emEl}
             <br />
             <img src={searchButton} alt="Search" onClick={search} style={{marginTop: "30px"}}/>
