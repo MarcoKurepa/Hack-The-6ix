@@ -1,7 +1,7 @@
-import './splashScreen.css';
-
 const SplashScreen = () => {
-    
+    document.body.style = "background-color: var(--lightBlue); height: 100%"
+    document.getElementById("html").style = "height: 100%"
+    document.getElementById("root").style = "height: 100%"
 
     return <div style={{
         display: 'flex',
@@ -11,7 +11,7 @@ const SplashScreen = () => {
         textAlign: 'center',
         height: "100%"
     }}>
-        <h1 style={{width: '100%', fontSize: '4em', marginBottom: "0", marginTop: "0"}}>MediFly</h1>
+        <h1 style={{width: '100%', fontSize: '4em', marginBottom: "0", marginTop: "0"}}>MediFLY</h1>
         <p style={{fontSize: '1em', marginBottom: "3em"}}>Get care fast and efficiently</p>
         <div style={{display: 'flex', alignItems: 'stretch'}}>
             <div style={{flex: '1 1 1', width: '50%'}}>
@@ -22,8 +22,8 @@ const SplashScreen = () => {
             </div>
         </div>
         <div style={{marginLeft: '30px', marginRight: '30px'}}>
-            <input type="button" className="roundedButton whiteHover" value="Get Started"/>
-            <input type="button" className="roundedButton blueHover" value="Log In" style={{marginTop: "15px"}}/>
+            <input type="button" className="bigRounded slightBold whiteHover" value="Get Started" onClick={() => window.location.replace('/client/register/')}/>
+            <input type="button" className="bigRounded slightBold blueHover" value="Log In" style={{marginTop: "15px"}} onClick={() => window.location.replace('/client/login')}/>
         </div>
 
     </div>

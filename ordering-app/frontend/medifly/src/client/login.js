@@ -1,8 +1,13 @@
 import {useState} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
+import { Headline } from './commons';
 
 const CustomerLogin = () => {
+    document.body.style = "height: 100%"
+    document.getElementById("html").style = "height: 100%"
+    document.getElementById("root").style = "height: 100%"
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(undefined);
@@ -18,16 +23,30 @@ const CustomerLogin = () => {
             }
         })
     }
+
+    const grayTextbox = {
+        backgroundColor: "var(--lightGray)",
+        color: "black",
+        fontSize: "1em",
+        width: 'inherit'
+    }
+
     return (
-    <div>
-        {!message || <p>{message}</p>}
-        <input type="text" placeholder="username" onChange={(x) => setUsername(x.target.value)} value={username} />
+    <>
+    <Headline />
+    <div style={{marginLeft: "20px", marginRight: "20px", display: 'flex', flexDirection: 'column', marginTop: "5em"}}>
+        {!message || <p style={{color: 'red'}}>{message}</p>}
+        <h3>Welcome</h3>
+        <p>Log into your account to receive fast medication deliveries</p>
+        <input type="text" placeholder="username" onChange={(x) => setUsername(x.target.value)} value={username} className="bigRounded" style={grayTextbox}/>
         <br />
-        <input type="password" placeholder="password" onChange={(x) => setPassword(x.target.value)} value={password} />
+        <input type="password" placeholder="password" onChange={(x) => setPassword(x.target.value)} value={password}
+        className="bigRounded" style={{...grayTextbox, marginTop: "10px"}}/>
         <br/>
-        <input type="button" value="Submit" onClick={onSubmit}/>
-        <a href="/client/register">Register</a>
-    </div>);
+        <input type="button" value="Submit" onClick={onSubmit} className="bigRounded blueHover" style={{marginTop: "2em", fontSize: '1em', color: 'white'}}/>
+        <input type="button" value="Register" onClick={() => window.location.replace('/client/register')} className="bigRounded whiteHover" style={{borderColor: 'black', borderWidth: '3px', marginTop: "10px"}}/>
+    </div>
+    </>);
 }
 
 export default CustomerLogin;

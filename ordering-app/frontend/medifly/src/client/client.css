@@ -4,15 +4,19 @@
     --lightestBlue: #20B3F2;
     --red: #FF0000;
     --lightGray: #EEEEEE;
+    --lightishGray: #CCCCCC;
 }
 
-.roundedButton {
+.bigRounded {
     padding: 10px 30px;
-    font-size: larger;
-    font-weight: bolder;
     border-radius: 40px;
     border-width: 0px;
     width: 100%;
+}
+
+.slightBold {
+    font-size: larger;
+    font-weight: bolder;
 }
 
 .whiteHover {
