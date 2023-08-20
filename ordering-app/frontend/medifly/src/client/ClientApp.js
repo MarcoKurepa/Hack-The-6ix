@@ -36,7 +36,7 @@ const RequestButton = ({sentRequest, setSent, name}) => {
         }
     }, [curLocation, curMedication, sendingRequest, sentRequest, setSent])
 
-    return <span style={{backgroundColor: 'white', padding: '10px', color: 'black', marginTop: '10px', borderRadius: '10px', fontWeight: 'bolder', textAlign: 'center'}} onClick={() => setSendingRequest(true)}>{name}</span>
+    return <span style={{backgroundColor: 'white', padding: '10px', color: 'black', marginTop: '10px', borderRadius: '10px', fontWeight: 'bolder', textAlign: 'center'}} onClick={() => setSendingRequest(true)} className="hoverGray">{name}</span>
 }
 
 const SearchPage = () => {
@@ -54,7 +54,7 @@ const SearchPage = () => {
     return <div style={{display: 'flex', flexDirection: 'column', paddingTop: '5em', backgroundColor: 'var(--lighterBlue)', paddingLeft: '20px', paddingRight: '20px'}}>
         {allMedication !== undefined && allMedication.map((el) =>             
         <RequestButton key={el} sentRequest={sentRequest} setSent={setSentRequest} name={el} />)}
-        <input type="button" value="Home" onClick={() => window.location.replace("/client")}/>
+        <input type="button" value="Home 🏠" onClick={() => window.location.replace("/client")} className="bigRounded slightBold grayHover" style={{marginTop: "10px", borderRadius: "10px", border: "solid 2px red"}}/>
     </div>
 }
 
