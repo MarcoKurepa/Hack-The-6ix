@@ -26,7 +26,7 @@ const RequestButton = ({sentRequest, setSent, name}) => {
                 medication: curMedication
             }, {withCredentials: true}).then((res) => {
                 if(res.status === 200 && res.data.message === "success"){
-                    alert("Success!")
+                    alert("Your request has been sent")
                     window.location.replace('/client/status')
                 } else {
                     alert("Something went wrong")
@@ -70,13 +70,17 @@ const StatusPage = () => {
     if(requests === undefined) return <>Loading...</>
     else {
         const els = requests.map((el, ind) => 
-            <div key={ind}>
-                <h1>{el.medication}</h1>
-                <p>From {el.hospitalName}</p>
-                <p>Status: {el.status}</p>
+            <div key={ind} style={{display: 'flex', alignItems: 'center', border: 'solid 2px black', borderRadius: "10px", padding: "10px", marginBottom: "15px", boxShadow: "3px 3px 7px black", justifyContent: "space-between"}}>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <h2 style={{marginBottom: '0'}}>{el.medication}</h2>
+                    <p>From {el.hospitalName}</p>
+                </div>
+                <p style={{textAlign: 'center'}}>Status: <br/>{el.status}</p>
             </div>
         )
-        return els
+        return <div style={{paddingTop: '5em', paddingLeft: '20px', paddingRight: '20px'}}>
+            {els}
+        </div>
     }
 }
 
