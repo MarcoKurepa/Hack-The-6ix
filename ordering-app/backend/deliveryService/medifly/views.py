@@ -7,7 +7,6 @@ from django.template import loader
 from .models import Hospital, Request, Customer, Medication
 from django.contrib.auth import login, logout
 
-
 @csrf_exempt
 def submit_request(request):
     if request.method == "POST":
@@ -178,3 +177,9 @@ def registration_done(request):
         customer.registration_complete = True
         customer.save()
         return JsonResponse({'message': 'success'})
+
+def last_uuid(request):
+    if Customer.objects.all():
+        return HttpResponse(Customer.objects.latest('date_joined').uuid)
+    else:
+        return HttpResponse(-1)
