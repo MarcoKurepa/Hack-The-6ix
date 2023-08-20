@@ -6,6 +6,7 @@
     --lightGray: #EEEEEE;
     --lightishGray: #CCCCCC;
     --gray: #AAAAAA;
+    --lighterGreen: #DDFFDD;
 }
 
 .bigRounded {
@@ -53,4 +54,13 @@
 
 .hoverGray:hover {
     background-color: var(--lightishGray);
+}
+
+.hoverLightGreen {
+    background-color: white;
+    transition-duration: 0.5s;
+}
+
+.hoverLightGreen:hover {
+    background-color: var(--lighterGreen);
 }

@@ -82,15 +82,13 @@ const MedicationSelectionPage = (props) => {
 
     if(allMedication === undefined) return <>Loading...</>
     else {
-        const elements = allMedication.map((el, ind) => 
-        <span key={el.name}>
-            <span style={el.used ? {backgroundColor: 'lightGreen'} : {backgroundColor: 'white'}} type="button" onClick={() => toggleChoice(ind)}>{el.name}</span>
-            <br/>
-        </span>
-        );
-        return <div>
+        const elements = allMedication.map((el, ind) => {
+            const colorStyle = el.used ? {backgroundColor: 'lightGreen'} : {}
+            return <span key={el.name} style={{...colorStyle, textAlign: 'center', padding: "5px", marginTop: "10px", border: "solid 2px black", borderRadius: "5px"}} type="button" onClick={() => toggleChoice(ind)} className={el.used ? "" : "hoverLightGreen"}>{el.name}</span>
+        });
+        return <div style={{marginTop: "5em", display: "flex", flexDirection: "column", paddingLeft: "20px", paddingRight: "20px"}}>
             {elements}
-            <input type="button" value="next" onClick={sendChoices} />
+            <input type="button" value="next" onClick={sendChoices} className="bigRounded grayHover slightBold" style={{marginTop: "10px"}}/>
         </div>
     }
 }
