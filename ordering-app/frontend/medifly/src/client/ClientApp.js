@@ -4,6 +4,8 @@ import ROUTES from '../ROUTES';
 import {Routes, Route, Navigate} from 'react-router-dom';
 import {RegisterPage, ActivationPage} from './register';
 import CustomerLogin from './login';
+import SplashScreen from './SplashScreen';
+import './client.css'
 
 axios.defaults.withCredentials = true;
 const LocationContext = React.createContext()
@@ -160,14 +162,15 @@ const Content = () => {
         return <Routes>
             <Route path="/register" element={<RegisterPage />}/>
             <Route path="/login" element={<CustomerLogin />} />
-            <Route path="/" element={<Navigate to="/client/login" />}></Route>
+            <Route path="/" element={<SplashScreen />} />
+            <Route path="/*" element={<Navigate to="/client" />} />
         </Routes>
     } else if(loggedIn && needCompletion){
         return <>
             <NavBar />
             <Routes>
                 <Route path="/activate" element={<ActivationPage />} />
-                <Route path="/" element = {<Navigate to="/client/activate" />}></Route>
+                <Route path="/*" element = {<Navigate to="/client/activate" />}></Route>
             </Routes>
         </>
     } else {
