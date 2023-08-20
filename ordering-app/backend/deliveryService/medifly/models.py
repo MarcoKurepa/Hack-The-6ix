@@ -22,6 +22,7 @@ class Customer(User):
     uuid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     registration_complete = models.BooleanField(default=False)
     emergency_medication = models.ManyToManyField(Medication)
+    phone = models.CharField(max_length=80)
 
     @staticmethod
     def authenticate(username, password):

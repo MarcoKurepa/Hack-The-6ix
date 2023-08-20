@@ -8,6 +8,14 @@ from .models import Hospital, Request, Customer, Medication, RequestStatus
 from django.contrib.auth import login, logout
 from django.db.models import Case, When, Value
 
+import os
+from twilio.rest import Client
+with open('.env', 'rt') as thing:
+    account_sid = thing.readline().strip()
+    auth_token = thing.readline().strip()
+    print(account_sid)
+client = Client(account_sid, auth_token)
+
 @csrf_exempt
 def submit_request(request):
     if request.method == "POST":
@@ -77,9 +85,15 @@ def update_request_status(request):
             body = json.loads(request.body)
             request_id = body['id']
             status_to = body['status']
+
             req = Request.objects.filter(id=request_id, hospital=hospital).first()
             if req is not None:
                 req.status = status_to
+                if status_to == RequestStatus.COMPLETED:
+                    print(req.user.phone)
+                    message = client.messages.create(body="Your order is ready! Go outside to meet your drone",
+                                                     from_="+17622285010", to=req.user.phone)
+
                 req.save()
                 return JsonResponse({'message': 'success'})
 
@@ -88,7 +102,7 @@ def update_request_status(request):
 def customer_register(request):
     if request.method == "POST":
         body = json.loads(request.body)
-        customer = Customer.objects.create_user(username=body['username'], password=body['password'])
+        customer = Customer.objects.create_user(username=body['username'], password=body['password'], phone=body['phoneNumber'])
         customer.save()
         if customer.pk is not None:
             login(request, customer)

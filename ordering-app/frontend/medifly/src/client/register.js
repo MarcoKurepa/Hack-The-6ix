@@ -6,11 +6,13 @@ import { Headline } from '../commons';
 export const RegisterPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [phone, setPhone] = useState("")
 
     const onSubmit = () => {
         axios.post(`${ROUTES.server}/customer/register`, {
             username: username,
-            password: password
+            password: password,
+            phoneNumber: phone
         }, {withCredentials: true}).then((response) => {
             if(response.status === 200 && response.data.message === "success"){
                 window.location.replace("/client/activate")
@@ -44,6 +46,7 @@ export const RegisterPage = () => {
             <br />
             <input type="password" placeholder="password" onChange={(x) => setPassword(x.target.value)} value={password} style={{...textbox, marginTop: "10px"}}/>
             <br/>
+            <input type="text" placeholder="phone number (+647......)" onChange={(x) => setPhone(x.target.value)} value={phone} style={{...textbox, marginTop: "10px"}}/>
             <input type="button" value="Submit" onClick={onSubmit} className="bigRounded blueHover slightBold" style={{marginTop: "30px", color: "white"}}/>
         </div>
     </>;

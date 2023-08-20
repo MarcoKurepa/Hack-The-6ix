@@ -17,7 +17,7 @@ for drug in ["Aspirin", "First Aid Kit"]:
 
 hospital2.save()
 
-user = Customer.objects.create_user(username='toady', password='asdf', registration_complete=True)
+user = Customer.objects.create_user(username='toady', password='asdf', phone="6475683766", registration_complete=True)
 user.emergency_medication.add(Medication.objects.get(name="First Aid Kit"))
 user.emergency_medication.add(Medication.objects.get(name="Aspirin"))
 user.save()
