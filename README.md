@@ -1,2 +1,4 @@
 # Hack-The-6ix
 Project for Hack The 6ix
+
+MediFly allows the user to request for emergency help or medication such as an Epipen and Epinephrine. First you download the MediFly app and request a personal account from your local hospital. Then you can log into your account and use the features when necessary. If you are in an emergency, press the "EMERGENCY" button and a list of common medication or a first aid kit are options for the person to pick from. Once a choice is selected the local hospital will see the request and deploy the medication to the person and human first responders will be called. The drone will have a GPS tracker on it and have a GPS location of the person it needs to sent the medication to. When the drone arrives a message is sent to the person. A camera will use facial recognition to confirm the correct person and open the holding compartment so the person can take their medication. 
