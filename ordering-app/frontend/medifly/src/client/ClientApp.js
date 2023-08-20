@@ -6,7 +6,7 @@ import {RegisterPage, ActivationPage} from './register';
 import CustomerLogin from './login';
 import SplashScreen from './SplashScreen';
 import './client.css'
-import { Headline } from './commons';
+import { Headline } from '../commons';
 import emergencyButton from './emergency.png';
 import searchButton from './search.png';
 

@@ -1,10 +1,10 @@
 import axios from 'axios';
-import ROUTES from '../ROUTES';
+import ROUTES from './ROUTES';
 
-export const Headline = ({loggedIn}) => {
+export const Headline = ({loggedIn=false, logOutLocation='/client'}) => {
     const logOut = () => {
         axios.get(`${ROUTES.server}/logout`).then((response) => {
-            window.location.replace('/client');
+            window.location.replace(logOutLocation);
         })
     }
     const cuteRound = {

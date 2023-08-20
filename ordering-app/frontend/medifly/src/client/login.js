@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
-import { Headline } from './commons';
+import { Headline } from '../commons';
 
 const CustomerLogin = () => {
     const [username, setUsername] = useState("");

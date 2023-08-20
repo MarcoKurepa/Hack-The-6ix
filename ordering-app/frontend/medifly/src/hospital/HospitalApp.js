@@ -2,27 +2,8 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
 import HospitalLogin from './login';
+import { Headline } from '../commons';
 axios.defaults.withCredentials = true;
-
-// the navbar
-const NavBar = () => {
-    const style = {
-        position: 'sticky',
-        top: 0,
-        backgroundColor: 'blue',
-        display: 'flex'
-    }
-    const buttonStyle = {
-        marginRight: 0,
-        marginLeft: 'auto'
-    }
-    const logOut = () => {
-        axios.get(`${ROUTES.server}/logout`).then((response) => {
-            window.location.replace('/hospital');
-        })
-    }
-    return <div style={style}><input type="button" style={buttonStyle} value="Logout" onClick={logOut}/></div>
-}
 
 const Dashboard = () => {
     const [info, setInfo] = useState(undefined)
@@ -47,6 +28,11 @@ const Dashboard = () => {
         })
     }
 
+    const verticalFlex = {
+        display: 'flex',
+        flexDirection: 'column'
+    }
+
     const toElem = (req) => {
         const lat_dist = 111 * (req.latitude - info.latitude)
         const long_dist = 111 * (req.longitude - info.longitude) * Math.cos(info.latitude * Math.PI / 180)
@@ -56,22 +42,28 @@ const Dashboard = () => {
             Rejected: [],
             Completed: []
         }
-        
-        const options = nex[req.status].map((el) => <input type="button" value={el} onClick={() => updateRequest(req.id, el)} />)
+
+        const options = nex[req.status].map((el) => <input type="button" value={el} onClick={() => updateRequest(req.id, el)} style={{border: 'solid 2px black', borderRadius: '10px'}} className="defaultWhite hoverGray"/>)
         return <>
-            <h3>Request to {req.username}: {req.medication}</h3>
-            <p>{Math.abs(lat_dist.toFixed(2))} km {lat_dist > 0 ? "North" : "South"}, {Math.abs(long_dist.toFixed(2))} km {long_dist > 0 ? "East" : "West"}</p>
-            <p>Currently {req.status}</p>
-            {options}
+            <div style={{...verticalFlex}}>
+                <h3>Request to {req.username}: {req.medication}</h3>
+                <p>{Math.abs(lat_dist.toFixed(2))} km {lat_dist > 0 ? "North" : "South"}, {Math.abs(long_dist.toFixed(2))} km {long_dist > 0 ? "East" : "West"}</p>
+            </div>
+            <div style={{...verticalFlex, marginLeft: '20px'}}>
+                <p>Currently {req.status}</p>
+                <div style={{display: 'flex', justifyContent: 'stretch', height: '100%', gap: '10px'}}>
+                    {options}
+                </div>
+            </div>
         </>
     }
 
     if(!info) return <>Loading...</>
     else {
-        return <>
+        return <div style={{...verticalFlex, marginLeft: '20px', marginRight: '20px', marginTop: '5em', gap:'15px'}}>
             <h1>Welcome {info.name}</h1>
-            {info.requests.map((el, ind) => <div key={ind}>{toElem(el)}</div>)}
-        </>
+            {info.requests.map((el, ind) => <div key={ind} style={{display: 'flex', border: 'solid 2px red', borderRadius: '10px', padding: '10px'}}>{toElem(el)}</div>)}
+        </div>
     }
 }
 
@@ -92,15 +84,20 @@ const Content = () => {
 
     if(!loginChecked) return <>Loading...</>
     else if(!loggedIn) {
-        return <HospitalLogin />
+        return <>
+            <Headline loggedIn={false}/>
+            <HospitalLogin />
+        </>
     } else {
-        return <Dashboard />
+        return <>
+            <Headline loggedIn={true} logOutLocation='/hospital'/>
+            <Dashboard />
+        </>
     }
 }
 
 const App = () => {
     return <>
-        <NavBar />
         <Content />
     </>
 }

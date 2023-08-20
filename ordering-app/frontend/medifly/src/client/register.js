@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
-import { Headline } from './commons';
+import { Headline } from '../commons';
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState("");
