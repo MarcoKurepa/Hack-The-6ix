@@ -47,7 +47,7 @@ const SearchPage = () => {
     }, [])
 
     return <div>
-        {allMedication && allMedication.map((el) =>             
+        {allMedication !== undefined && allMedication.map((el) =>             
         <span key={el}>
                 <RequestButton sentRequest={sentRequest} setSent={setSentRequest} name={el} />
                 <br />
@@ -57,7 +57,25 @@ const SearchPage = () => {
 }
 
 const StatusPage = () => {
-
+    const [requests, setRequests] = useState(undefined)
+    useEffect(() => {
+        axios.get(`${ROUTES.server}/customer/requests`, {withCredentials: true}).then((res) => {
+            if(res.status === 200){
+                setRequests(res.data.requests)
+            }
+        })
+    }, [])
+    if(requests === undefined) return <>Loading...</>
+    else {
+        const els = requests.map((el, ind) => 
+            <div key={ind}>
+                <h1>{el.medication}</h1>
+                <p>From {el.hospitalName}</p>
+                <p>Status: {el.status}</p>
+            </div>
+        )
+        return els
+    }
 }
 
 const Dashboard = () => {

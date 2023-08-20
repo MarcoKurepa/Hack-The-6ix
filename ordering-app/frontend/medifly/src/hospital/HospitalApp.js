@@ -34,12 +34,22 @@ const Dashboard = () => {
                 setInfo(response.data)
             }
         })
-    })
+    }, [])
+
+    const toElem = (el) => {
+        const lat_dist = 111 * (el.latitude - info.latitude)
+        const long_dist = 111 * (el.longitude - info.longitude) * Math.cos(info.latitude * Math.PI / 180)
+        return <>
+            <h3>Request to {el.username}: {el.medication}</h3>
+            <p>{Math.abs(lat_dist.toFixed(2))} km {lat_dist > 0 ? "North" : "South"}, {Math.abs(long_dist.toFixed(2))} km {long_dist > 0 ? "East" : "West"}</p>
+        </>
+    }
 
     if(!info) return <>Loading...</>
     else {
         return <>
             <h1>Welcome {info.name}</h1>
+            {info.requests.map((el, ind) => <div key={ind}>{toElem(el)}</div>)}
         </>
     }
 }

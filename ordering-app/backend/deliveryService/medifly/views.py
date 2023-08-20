@@ -19,7 +19,7 @@ def submit_request(request):
                 long, lat, medication = body['long'], body['lat'], body['medication']
                 nearby = Hospital.objects.filter(inventory__name__iexact=medication)
                 closest = min(nearby, key=lambda x: (float(x.longitude)-long)**2 + (float(x.latitude)-lat)**2)
-                request = Request(hospital=closest, user=customer, longitude=long, latitude=lat, medication=medication)
+                request = Request(hospital=closest, user=customer, longitude=long, latitude=lat, medication=Medication.objects.get(name=medication))
                 request.save()
                 return JsonResponse({'message': 'success'})
 
@@ -59,8 +59,8 @@ def hospital_data(request):
             hospital = Hospital.objects.get(username=username)
             requests = hospital.request_set.all()
             request_data = [{'username': q.user.username, 'longitude': q.longitude, 'latitude': q.latitude,
-                             'medication': q.medication} for q in requests]
-            hospital_info = {'name': hospital.hospital_name, 'requests': request_data}
+                             'medication': q.medication.name} for q in requests]
+            hospital_info = {'name': hospital.hospital_name, 'longitude': hospital.longitude, 'latitude': hospital.latitude, 'requests': request_data}
             return JsonResponse(hospital_info)
 
 @csrf_exempt
@@ -106,6 +106,18 @@ def customer_logged_in(request):
             return JsonResponse({'loggedIn': True, 'registrationCompleted': False})
     else:
         return JsonResponse({'loggedIn': False, 'registrationCompleted': False})
+
+def customer_requests(request):
+    if request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists():
+        customer = Customer.objects.get(username=request.user.username)
+        requests = Request.objects.filter(user=customer)
+        return JsonResponse({
+            'requests': list(map(lambda x: {
+                'hospitalName': x.hospital.hospital_name,
+                'medication': x.medication.name,
+                'status': x.status
+            }, requests))
+        })
 
 def important_medication(request):
     if request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists():

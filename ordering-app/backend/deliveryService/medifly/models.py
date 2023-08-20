@@ -29,9 +29,16 @@ class Customer(User):
             return Customer.objects.filter(username=username).first()
         return None
 
+class RequestStatus(models.TextChoices):
+    PENDING = 'Pending'
+    APPROVED = 'Approved'
+    REJECTED = 'Rejected'
+    COMPLETED = 'Completed'
+
 class Request(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    medication = models.CharField(max_length=80)
+    medication = models.ForeignKey(Medication, on_delete=models.CASCADE)
+    status = models.TextField(max_length=20, choices=RequestStatus.choices, default=RequestStatus.PENDING)
