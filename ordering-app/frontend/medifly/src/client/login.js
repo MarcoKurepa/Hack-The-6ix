@@ -4,10 +4,6 @@ import ROUTES from '../ROUTES';
 import { Headline } from './commons';
 
 const CustomerLogin = () => {
-    document.body.style = "height: 100%"
-    document.getElementById("html").style = "height: 100%"
-    document.getElementById("root").style = "height: 100%"
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(undefined);

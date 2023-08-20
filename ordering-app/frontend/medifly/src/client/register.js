@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import ROUTES from '../ROUTES';
+import { Headline } from './commons';
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState("");
@@ -19,14 +20,31 @@ export const RegisterPage = () => {
         })
     }
 
+    const textbox = {
+        backgroundColor: "white",
+        color: "black",
+        fontSize: "1em",
+        width: 'inherit',
+        borderWidth: '0px 0px 3px 0px',
+        borderBottomColor: 'black',
+        padding: "10px 30px"
+    }
+
+    const verticalFlex = {
+        display: "flex",
+        flexDirection: "column"
+    }
+
     return <>
-        <h1>Register as a customer</h1>
-        <div>
-            <input type="text" placeholder="username" onChange={(x) => setUsername(x.target.value)} value={username} />
+        <Headline />
+        <div style={{marginTop: "5em", ...verticalFlex, marginLeft: "10px", marginRight: "10px"}}>
+            <h2>Let's Get Started</h2>
+            <p>Sign up to explore all the different features</p>
+            <input type="text" placeholder="username" onChange={(x) => setUsername(x.target.value)} value={username} style={textbox}/>
             <br />
-            <input type="password" placeholder="password" onChange={(x) => setPassword(x.target.value)} value={password} />
+            <input type="password" placeholder="password" onChange={(x) => setPassword(x.target.value)} value={password} style={{...textbox, marginTop: "10px"}}/>
             <br/>
-            <input type="button" value="Submit" onClick={onSubmit}/>
+            <input type="button" value="Submit" onClick={onSubmit} className="bigRounded blueHover slightBold" style={{marginTop: "30px", color: "white"}}/>
         </div>
     </>;
 }

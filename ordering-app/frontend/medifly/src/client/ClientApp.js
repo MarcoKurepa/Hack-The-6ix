@@ -6,6 +6,9 @@ import {RegisterPage, ActivationPage} from './register';
 import CustomerLogin from './login';
 import SplashScreen from './SplashScreen';
 import './client.css'
+import { Headline } from './commons';
+import emergencyButton from './emergency.png';
+import searchButton from './search.png';
 
 axios.defaults.withCredentials = true;
 const LocationContext = React.createContext()
@@ -33,7 +36,7 @@ const RequestButton = ({sentRequest, setSent, name}) => {
         }
     }, [curLocation, curMedication, sendingRequest, sentRequest, setSent])
 
-    return <span onClick={() => setSendingRequest(true)}>{name}</span>
+    return <span style={{backgroundColor: 'white', padding: '10px', color: 'black', marginTop: '10px', borderRadius: '10px', fontWeight: 'bolder', textAlign: 'center'}} onClick={() => setSendingRequest(true)}>{name}</span>
 }
 
 const SearchPage = () => {
@@ -48,12 +51,9 @@ const SearchPage = () => {
         })
     }, [])
 
-    return <div>
+    return <div style={{display: 'flex', flexDirection: 'column', paddingTop: '5em', backgroundColor: 'var(--lighterBlue)', paddingLeft: '20px', paddingRight: '20px'}}>
         {allMedication !== undefined && allMedication.map((el) =>             
-        <span key={el}>
-                <RequestButton sentRequest={sentRequest} setSent={setSentRequest} name={el} />
-                <br />
-        </span>)}
+        <RequestButton key={el} sentRequest={sentRequest} setSent={setSentRequest} name={el} />)}
         <input type="button" value="Home" onClick={() => window.location.replace("/client")}/>
     </div>
 }
@@ -102,42 +102,22 @@ const Dashboard = () => {
         window.location.replace("/client/search")
     }
 
-    let emEl = <input type="button" value="Emergency" onClick={emergency} />
+    let emEl = <img src={emergencyButton} alt="Emergency" style={{borderRadius: "40px", boxShadow: "10px 10px 10px black", width: "90%", textAlign: 'center', marginTop: "30px", marginLeft: 'auto', marginRight: 'auto'}} onClick={emergency} />
     if(isEmergency && emergencyMedication){
-        emEl = <div>
+        emEl = <div style={{backgroundColor: "var(--red)", borderRadius: "40px", marginTop: "40px", color: "white", display: 'flex', flexDirection: 'column', padding: "20px"}}>
+            <h2>Emergency Medication Options</h2>
         {emergencyMedication.map((el) => 
-            <span key={el}>
-                <RequestButton sentRequest={sentRequest} setSent={setSentRequest} name={el} />
-                <br />
-            </span>)}
+            <RequestButton key={el} sentRequest={sentRequest} setSent={setSentRequest} name={el} />)}
         </div>
     }
 
     return <>
-        {emEl}
-        <br />
-        <input type="button" value="Search" onClick={search} />
+        <div style={{display: 'flex', flexDirection: 'column', marginTop: "5em", marginLeft: "50px", marginRight: "50px", textAlign: 'center'}}>
+            {emEl}
+            <br />
+            <img src={searchButton} alt="Search" onClick={search} style={{marginTop: "30px"}}/>
+        </div>
     </>
-}
-
-// the navbar
-const NavBar = () => {
-    const style = {
-        position: 'sticky',
-        top: 0,
-        backgroundColor: 'blue',
-        display: 'flex'
-    }
-    const buttonStyle = {
-        marginRight: 0,
-        marginLeft: 'auto'
-    }
-    const logOut = () => {
-        axios.get(`${ROUTES.server}/logout`).then((response) => {
-            window.location.replace('/client');
-        })
-    }
-    return <div style={style}><input type="button" style={buttonStyle} value="Logout" onClick={logOut}/></div>
 }
 
 const Content = () => {
@@ -167,7 +147,7 @@ const Content = () => {
         </Routes>
     } else if(loggedIn && needCompletion){
         return <>
-            <NavBar />
+            <Headline loggedIn={true}/>
             <Routes>
                 <Route path="/activate" element={<ActivationPage />} />
                 <Route path="/*" element = {<Navigate to="/client/activate" />}></Route>
@@ -175,7 +155,7 @@ const Content = () => {
         </>
     } else {
         return <>
-            <NavBar />
+            <Headline loggedIn={true}/>
             <Routes>
                 <Route path="/register" element={<RegisterPage />}/>
                 <Route path="/login" element={<CustomerLogin />} />
