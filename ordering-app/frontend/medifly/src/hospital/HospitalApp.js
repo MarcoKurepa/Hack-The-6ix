@@ -43,7 +43,7 @@ const Dashboard = () => {
             Completed: []
         }
 
-        const options = nex[req.status].map((el) => <input type="button" value={el} onClick={() => updateRequest(req.id, el)} style={{border: 'solid 2px black', borderRadius: '10px'}} className="defaultWhite hoverGray"/>)
+        const options = nex[req.status].map((el) => <input type="button" key={el} value={el} onClick={() => updateRequest(req.id, el)} style={{border: 'solid 2px black', borderRadius: '10px'}} className="defaultWhite hoverGray"/>)
         return <>
             <div style={{...verticalFlex}}>
                 <h3>Request to {req.username}: {req.medication}</h3>
@@ -62,7 +62,7 @@ const Dashboard = () => {
     else {
         return <div style={{...verticalFlex, marginLeft: '20px', marginRight: '20px', marginTop: '5em', gap:'15px'}}>
             <h1>Welcome {info.name}</h1>
-            {info.requests.map((el, ind) => <div key={ind} style={{display: 'flex', border: 'solid 2px red', borderRadius: '10px', padding: '10px'}}>{toElem(el)}</div>)}
+            {info.requests.map((el) => <div key={el.id} style={{display: 'flex', border: 'solid 2px red', borderRadius: '10px', padding: '10px'}}>{toElem(el)}</div>)}
         </div>
     }
 }

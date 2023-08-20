@@ -4,8 +4,9 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 
-from .models import Hospital, Request, Customer, Medication
+from .models import Hospital, Request, Customer, Medication, RequestStatus
 from django.contrib.auth import login, logout
+from django.db.models import Case, When, Value
 
 @csrf_exempt
 def submit_request(request):
@@ -49,6 +50,12 @@ def hospital_login(request):
         else:
             return JsonResponse({'message': 'none found', 'success': False})
 
+requestPriorityOrdering = Case(
+                When(status=RequestStatus.PENDING, then=Value(0)),
+                When(status=RequestStatus.APPROVED, then=Value(1)),
+                When(status=RequestStatus.COMPLETED, then=Value(2)),
+                When(status=RequestStatus.REJECTED, then=Value(3))
+            )
 
 @csrf_exempt
 def hospital_data(request):
@@ -56,7 +63,7 @@ def hospital_data(request):
         username = request.user.username
         if Hospital.objects.filter(username=username).exists():
             hospital = Hospital.objects.get(username=username)
-            requests = hospital.request_set.all()
+            requests = hospital.request_set.all().order_by(requestPriorityOrdering)
             request_data = [{'username': q.user.username, 'longitude': q.longitude, 'latitude': q.latitude,
                              'medication': q.medication.name, 'id': q.id, 'status': q.status} for q in requests]
             hospital_info = {'name': hospital.hospital_name, 'longitude': hospital.longitude, 'latitude': hospital.latitude, 'requests': request_data}
@@ -124,12 +131,13 @@ def customer_logged_in(request):
 def customer_requests(request):
     if request.user.is_authenticated and Customer.objects.filter(username=request.user.username).exists():
         customer = Customer.objects.get(username=request.user.username)
-        requests = Request.objects.filter(user=customer)
+        requests = Request.objects.filter(user=customer).order_by(requestPriorityOrdering)
         return JsonResponse({
             'requests': list(map(lambda x: {
                 'hospitalName': x.hospital.hospital_name,
                 'medication': x.medication.name,
-                'status': x.status
+                'status': x.status,
+                'id': x.id
             }, requests))
         })
 
