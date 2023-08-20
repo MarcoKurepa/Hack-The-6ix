@@ -27,21 +27,42 @@ const NavBar = () => {
 const Dashboard = () => {
     const [info, setInfo] = useState(undefined)
 
-    useEffect(() => {
+    const populateData = () => {
         const url = `${ROUTES.server}/hospital/info`
         axios.get(url, {withCredentials: true}).then((response) => {
             if(response.status === 200){
                 setInfo(response.data)
             }
         })
-    }, [])
+    }
+    useEffect(populateData, [])
+    const updateRequest = (id, status) => {
+        axios.post(`${ROUTES.server}/hospital/update_status`, {
+            id: id,
+            status: status
+        }, {withCredentials: true}).then((res) => {
+            if(res.status === 200 && res.data.message === "success"){
+                populateData()
+            }
+        })
+    }
 
-    const toElem = (el) => {
-        const lat_dist = 111 * (el.latitude - info.latitude)
-        const long_dist = 111 * (el.longitude - info.longitude) * Math.cos(info.latitude * Math.PI / 180)
+    const toElem = (req) => {
+        const lat_dist = 111 * (req.latitude - info.latitude)
+        const long_dist = 111 * (req.longitude - info.longitude) * Math.cos(info.latitude * Math.PI / 180)
+        const nex = {
+            Pending: ["Approved", "Rejected"],
+            Approved: ["Completed"], 
+            Rejected: [],
+            Completed: []
+        }
+        
+        const options = nex[req.status].map((el) => <input type="button" value={el} onClick={() => updateRequest(req.id, el)} />)
         return <>
-            <h3>Request to {el.username}: {el.medication}</h3>
+            <h3>Request to {req.username}: {req.medication}</h3>
             <p>{Math.abs(lat_dist.toFixed(2))} km {lat_dist > 0 ? "North" : "South"}, {Math.abs(long_dist.toFixed(2))} km {long_dist > 0 ? "East" : "West"}</p>
+            <p>Currently {req.status}</p>
+            {options}
         </>
     }
 

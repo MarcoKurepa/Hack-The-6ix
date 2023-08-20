@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from .views import submit_request, hospital_register, hospital_login, hospital_data, customer_register, customer_login, \
     hospital_logged_in, customer_logged_in, user_logout, customer_uuid, medications, start_video_stream, set_emergency_medication, \
-    registration_done, important_medication, customer_requests
+    registration_done, important_medication, customer_requests, update_request_status
 
 urlpatterns = [
     path('submit-request/', submit_request),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('hospital/login', hospital_login),
     path('hospital/info', hospital_data),
     path('hospital/logged-in', hospital_logged_in),
+    path('hospital/update_status', update_request_status),
     path('customer/register', customer_register),
     path('customer/login', customer_login),
     path('customer/logged-in', customer_logged_in),
